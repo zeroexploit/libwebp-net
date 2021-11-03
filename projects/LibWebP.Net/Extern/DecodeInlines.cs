@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebPSharp.Extern {
+namespace LibWebP.Net.Extern {
     public partial class NativeMethods {
 
         // Some useful macros:

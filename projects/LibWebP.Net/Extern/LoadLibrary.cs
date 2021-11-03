@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace WebPSharp.Extern
+namespace LibWebP.Net.Extern
 {
     public static class LoadLibrary
     {

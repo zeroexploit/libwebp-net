@@ -1,4 +1,4 @@
-﻿namespace WebPSharp.Extern {
+﻿namespace LibWebP.Net.Extern {
     public partial class NativeMethods {
         /// <summary>
         /// Should always be called, to initialize a fresh WebPConfig structure before

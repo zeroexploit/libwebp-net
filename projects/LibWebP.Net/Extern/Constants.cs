@@ -1,5 +1,5 @@
 ﻿#pragma warning disable 1591
-namespace WebPSharp.Extern {
+namespace LibWebP.Net.Extern {
     public partial class NativeMethods {
 
         /// WEBP_DECODER_ABI_VERSION 0x0208    // MAJOR(8b) + MINOR(8b)
