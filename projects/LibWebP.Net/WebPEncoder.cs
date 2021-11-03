@@ -3,11 +3,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
-using LibWebP.Net.Extern;
+using LibWebP.Net.Native;
 
 namespace LibWebP.Net
 {
-    // todo: error codes handeln und exceptions entsprechend anpassen
     public class WebPEncoder
     {
         public static string GetEncoderVersion()
@@ -44,7 +43,7 @@ namespace LibWebP.Net
             }
             finally
             {
-                NativeMethods.WebPSafeFree(result);
+                NativeMethods.WebPFree(result);
             }
         }
 

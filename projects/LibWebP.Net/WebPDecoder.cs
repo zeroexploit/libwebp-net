@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using LibWebP.Net.Extern;
+using LibWebP.Net.Native;
 
 namespace LibWebP.Net
 {
-    // todo: error codes handeln und exceptions entsprechend anpassen
     public class WebPDecoder
     {
         public static string GetDecoderVersion()
