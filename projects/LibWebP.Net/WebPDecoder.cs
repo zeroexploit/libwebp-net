@@ -5,7 +5,7 @@ using LibWebP.Net.Native;
 
 namespace LibWebP.Net
 {
-    public class WebPDecoder
+    public static class WebPDecoder
     {
         public static string GetDecoderVersion()
         {
@@ -18,7 +18,7 @@ namespace LibWebP.Net
             return $"{major}.{minor}.{revision}";
         }
 
-        public unsafe Bitmap DecodeFromBytes(byte[] data, long length)
+        public static unsafe Bitmap DecodeFromBytes(byte[] data, long length)
         {
             fixed (byte* dataptr = data)
             {
@@ -26,7 +26,7 @@ namespace LibWebP.Net
             }
         }
 
-        public Bitmap DecodeFromPointer(IntPtr data, long length)
+        public static Bitmap DecodeFromPointer(IntPtr data, long length)
         {
             var width = 0;
             var height = 0;

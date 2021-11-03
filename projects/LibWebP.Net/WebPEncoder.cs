@@ -7,7 +7,7 @@ using LibWebP.Net.Native;
 
 namespace LibWebP.Net
 {
-    public class WebPEncoder
+    public static class WebPEncoder
     {
         public static string GetEncoderVersion()
         {
@@ -26,20 +26,17 @@ namespace LibWebP.Net
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="quality"></param>
-        public void Encode(Bitmap from, Stream to, float quality)
+        public static unsafe void Encode(Bitmap from, Stream to, float quality)
         {
-            Encode(from, quality, out var result, out var length);
-
+            var result = IntPtr.Zero;
+            
             try
             {
-                var buffer = new byte[4096];
+                Encode(from, quality, out result, out var length);
 
-                for (var i = 0; i < length; i += buffer.Length)
-                {
-                    var used = (int)Math.Min(buffer.Length, length - i);
-                    Marshal.Copy((IntPtr)((long)result + i), buffer, 0, used);
-                    to.Write(buffer, 0, used);
-                }
+                var pointer = (byte*)result.ToPointer();
+                using var unmangedStream = new UnmanagedMemoryStream(pointer, length, length, FileAccess.Read);
+                unmangedStream.CopyTo(to);
             }
             finally
             {
@@ -50,11 +47,11 @@ namespace LibWebP.Net
         /// <summary>
         /// Encodes the given RGB(A) bitmap to an unmanged memory buffer (returned via result/length). Specify quality = -1 for lossless, otherwise specify a value between 0 and 100.
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="bitmap"></param>
         /// <param name="quality"></param>
         /// <param name="result"></param>
         /// <param name="length"></param>
-        public void Encode(Bitmap b, float quality, out IntPtr result, out long length)
+        public static void Encode(Bitmap bitmap, float quality, out IntPtr result, out long length)
         {
             if (quality < -1)
                 quality = -1;
@@ -62,15 +59,15 @@ namespace LibWebP.Net
             if (quality > 100)
                 quality = 100;
 
-            var width = b.Width;
-            var height = b.Height;
-            var bitmapData = b.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, b.PixelFormat);
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
             try
             {
                 result = IntPtr.Zero;
 
-                switch (b.PixelFormat)
+                switch (bitmap.PixelFormat)
                 {
                     case PixelFormat.Format32bppArgb when quality == -1:
                         length = (long)NativeMethods.WebPEncodeLosslessBGRA(bitmapData.Scan0, width, height, bitmapData.Stride, ref result);
@@ -85,11 +82,11 @@ namespace LibWebP.Net
                         length = (long)NativeMethods.WebPEncodeBGR(bitmapData.Scan0, width, height, bitmapData.Stride, quality, ref result);
                         break;
                     default:
-                    {
-                        using var b2 = b.Clone(new Rectangle(0, 0, b.Width, b.Height), PixelFormat.Format32bppArgb);
-                        Encode(b2, quality, out result, out length);
-                        break;
-                    }
+                        {
+                            using var b2 = bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), PixelFormat.Format32bppArgb);
+                            Encode(b2, quality, out result, out length);
+                            break;
+                        }
                 }
 
                 if (length == 0)
@@ -97,7 +94,7 @@ namespace LibWebP.Net
             }
             finally
             {
-                b.UnlockBits(bitmapData);
+                bitmap.UnlockBits(bitmapData);
             }
         }
     }
