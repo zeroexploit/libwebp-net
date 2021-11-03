@@ -3,133 +3,58 @@ using System.Runtime.InteropServices;
 
 namespace LibWebP.Net.Extern
 {
-
-
     [StructLayout(LayoutKind.Sequential)]
-    public struct WebPIDecoder { }
+    public struct WebPiDecoder { }
 
-
-
-
-
-    public enum WEBP_CSP_MODE
+    public enum WebpCspMode
     {
-
-        /// MODE_RGB -> 0
         MODE_RGB = 0,
-
-        /// MODE_RGBA -> 1
         MODE_RGBA = 1,
-
-        /// MODE_BGR -> 2
         MODE_BGR = 2,
-
-        /// MODE_BGRA -> 3
         MODE_BGRA = 3,
-
-        /// MODE_ARGB -> 4
         MODE_ARGB = 4,
-
-        /// MODE_RGBA_4444 -> 5
         MODE_RGBA_4444 = 5,
-
-        /// MODE_RGB_565 -> 6
         MODE_RGB_565 = 6,
-
-        /// MODE_rgbA -> 7
         MODE_rgbA = 7,
-
-        /// MODE_bgrA -> 8
         MODE_bgrA = 8,
-
-        /// MODE_Argb -> 9
         MODE_Argb = 9,
-
-        /// MODE_rgbA_4444 -> 10
         MODE_rgbA_4444 = 10,
-
-        /// MODE_YUV -> 11
         MODE_YUV = 11,
-
-        /// MODE_YUVA -> 12
         MODE_YUVA = 12,
-
-        /// MODE_LAST -> 13
         MODE_LAST = 13,
     }
-
-
-
-
-
-
-    //------------------------------------------------------------------------------
-    // WebPDecBuffer: Generic structure for describing the output sample buffer.
-
+    
     [StructLayout(LayoutKind.Sequential)]
     public struct WebPRGBABuffer
     {
-
-        /// uint8_t*
         public IntPtr rgba;
-
-        /// int
         public int stride;
-
-        /// size_t->unsigned int
         public UIntPtr size;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct WebPYUVABuffer
     {
-
-        /// uint8_t*
         public IntPtr y;
-
-        /// uint8_t*
         public IntPtr u;
-
-        /// uint8_t*
         public IntPtr v;
-
-        /// uint8_t*
         public IntPtr a;
-
-        /// int
         public int y_stride;
-
-        /// int
         public int u_stride;
-
-        /// int
         public int v_stride;
-
-        /// int
         public int a_stride;
-
-        /// size_t->unsigned int
         public UIntPtr y_size;
-
-        /// size_t->unsigned int
         public UIntPtr u_size;
-
-        /// size_t->unsigned int
         public UIntPtr v_size;
-
-        /// size_t->unsigned int
         public UIntPtr a_size;
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public struct Anonymous_690ed5ec_4c3d_40c6_9bd0_0747b5a28b54
+    public struct WebPSomeBuffer
     {
-
-        /// WebPRGBABuffer->Anonymous_47cdec86_3c1a_4b39_ab93_76bc7499076a
         [FieldOffset(0)]
         public WebPRGBABuffer RGBA;
 
-        /// WebPYUVABuffer->Anonymous_70de6e8e_c3ae_4506_bef0_c17f17a7e678
         [FieldOffset(0)]
         public WebPYUVABuffer YUVA;
     }
@@ -137,53 +62,28 @@ namespace LibWebP.Net.Extern
     [StructLayout(LayoutKind.Sequential)]
     public struct WebPDecBuffer
     {
-
-        /// WEBP_CSP_MODE->Anonymous_cb136f5b_1d5d_49a0_aca4_656a79e9d159
-        public WEBP_CSP_MODE colorspace;
-
-        /// int
+        public WebpCspMode colorspace;
         public int width;
-
-        /// int
         public int height;
-
-        /// int
         public int is_external_memory;
+        public WebPSomeBuffer u;
 
-        /// Anonymous_690ed5ec_4c3d_40c6_9bd0_0747b5a28b54
-        public Anonymous_690ed5ec_4c3d_40c6_9bd0_0747b5a28b54 u;
-
-        /// uint32_t[4]
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.U4)]
         public uint[] pad;
 
-        /// uint8_t*
         public IntPtr private_memory;
     }
 
-
-    //------------------------------------------------------------------------------
-    // Enumeration of the status codes
-
     public enum VP8StatusCode
     {
-
-        /// VP8_STATUS_OK -> 0
         VP8_STATUS_OK = 0,
-
         VP8_STATUS_OUT_OF_MEMORY,
-
         VP8_STATUS_INVALID_PARAM,
-
         VP8_STATUS_BITSTREAM_ERROR,
-
         VP8_STATUS_UNSUPPORTED_FEATURE,
-
         VP8_STATUS_SUSPENDED,
-
         VP8_STATUS_USER_ABORT,
-
-        VP8_STATUS_NOT_ENOUGH_DATA,
+        VP8_STATUS_NOT_ENOUGH_DATA
     }
 
 
@@ -457,7 +357,7 @@ namespace LibWebP.Net.Extern
         ///output_buffer_size: size_t->unsigned int
         ///output_stride: int
         [DllImport("libwebp", EntryPoint = "WebPINewRGB", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr WebPINewRGB(WEBP_CSP_MODE csp, IntPtr output_buffer, UIntPtr output_buffer_size, int output_stride);
+        public static extern IntPtr WebPINewRGB(WebpCspMode csp, IntPtr output_buffer, UIntPtr output_buffer_size, int output_stride);
 
 
         /// Return Type: WebPIDecoder*
@@ -494,7 +394,7 @@ namespace LibWebP.Net.Extern
         /// Return Type: void
         ///idec: WebPIDecoder*
         [DllImport("libwebp", EntryPoint = "WebPIDelete", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void WebPIDelete(ref WebPIDecoder idec);
+        public static extern void WebPIDelete(ref WebPiDecoder idec);
 
 
         /// Return Type: VP8StatusCode->Anonymous_b244cc15_fbc7_4c41_8884_71fe4f515cd6
@@ -502,7 +402,7 @@ namespace LibWebP.Net.Extern
         ///data: uint8_t*
         ///data_size: size_t->unsigned int
         [DllImport("libwebp", EntryPoint = "WebPIAppend", CallingConvention = CallingConvention.Cdecl)]
-        public static extern VP8StatusCode WebPIAppend(ref WebPIDecoder idec, [In()] IntPtr data, UIntPtr data_size);
+        public static extern VP8StatusCode WebPIAppend(ref WebPiDecoder idec, [In()] IntPtr data, UIntPtr data_size);
 
 
         /// Return Type: VP8StatusCode->Anonymous_b244cc15_fbc7_4c41_8884_71fe4f515cd6
@@ -510,7 +410,7 @@ namespace LibWebP.Net.Extern
         ///data: uint8_t*
         ///data_size: size_t->unsigned int
         [DllImport("libwebp", EntryPoint = "WebPIUpdate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern VP8StatusCode WebPIUpdate(ref WebPIDecoder idec, [In()] IntPtr data, UIntPtr data_size);
+        public static extern VP8StatusCode WebPIUpdate(ref WebPiDecoder idec, [In()] IntPtr data, UIntPtr data_size);
 
 
         /// Return Type: uint8_t*
@@ -520,7 +420,7 @@ namespace LibWebP.Net.Extern
         ///height: int*
         ///stride: int*
         [DllImport("libwebp", EntryPoint = "WebPIDecGetRGB", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr WebPIDecGetRGB(ref WebPIDecoder idec, ref int last_y, ref int width, ref int height, ref int stride);
+        public static extern IntPtr WebPIDecGetRGB(ref WebPiDecoder idec, ref int last_y, ref int width, ref int height, ref int stride);
 
 
         /// Return Type: uint8_t*
@@ -535,7 +435,7 @@ namespace LibWebP.Net.Extern
         ///uv_stride: int*
         ///a_stride: int*
         [DllImport("libwebp", EntryPoint = "WebPIDecGetYUVA", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr WebPIDecGetYUVA(ref WebPIDecoder idec, ref int last_y, ref IntPtr u, ref IntPtr v, ref IntPtr a, ref int width, ref int height, ref int stride, ref int uv_stride, ref int a_stride);
+        public static extern IntPtr WebPIDecGetYUVA(ref WebPiDecoder idec, ref int last_y, ref IntPtr u, ref IntPtr v, ref IntPtr a, ref int width, ref int height, ref int stride, ref int uv_stride, ref int a_stride);
 
 
         /// Return Type: WebPDecBuffer*
@@ -545,7 +445,7 @@ namespace LibWebP.Net.Extern
         ///width: int*
         ///height: int*
         [DllImport("libwebp", EntryPoint = "WebPIDecodedArea", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr WebPIDecodedArea(ref WebPIDecoder idec, ref int left, ref int top, ref int width, ref int height);
+        public static extern IntPtr WebPIDecodedArea(ref WebPiDecoder idec, ref int left, ref int top, ref int width, ref int height);
 
 
         /// Return Type: VP8StatusCode->Anonymous_b244cc15_fbc7_4c41_8884_71fe4f515cd6

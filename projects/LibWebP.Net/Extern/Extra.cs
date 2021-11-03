@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace LibWebP.Net.Extern {
-    public partial class NativeMethods {
-        
+namespace LibWebP.Net.Extern 
+{
+    public partial class NativeMethods 
+    {
         public static void WebPSafeFree(IntPtr toDeallocate)
         {
             WebPFree(toDeallocate);

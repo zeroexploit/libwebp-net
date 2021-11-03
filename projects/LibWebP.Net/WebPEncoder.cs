@@ -7,6 +7,7 @@ using LibWebP.Net.Extern;
 
 namespace LibWebP.Net
 {
+    // todo: error codes handeln und exceptions entsprechend anpassen
     public class WebPEncoder
     {
         public static string GetEncoderVersion()
