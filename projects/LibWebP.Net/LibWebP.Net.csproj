@@ -9,7 +9,7 @@
     <Description>Native Wrapper around libwebp to allowe en- and decoding of WebP Images through System.Drawing Bitmaps</Description>
     <RepositoryType>github</RepositoryType>
     <PackageTags>webp image processing decoder encoder</PackageTags>
-    <RepositoryUrl>https://github.com/omegaframe/webpsharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/zeroexploit/libwebp-net</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

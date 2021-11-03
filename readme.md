@@ -1,1 +1,1 @@
-# libwebp wrapper for .NETStandard
+# libwebp wrapper for .NET
